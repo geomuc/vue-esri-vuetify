@@ -1,58 +1,115 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+<v-app id="inspire">
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+    >
+      <v-list dense>
+        <v-list-item>
+          <v-list-item-action>
+            <v-icon>mdi-home</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-action>
+            <v-icon>mdi-contact-mail</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Contact</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-app-bar
+      app
+      color="indigo"
+      dark
+    >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>Application</v-toolbar-title>
+    </v-app-bar>
+
+    <v-content>
+      <v-container
+        class="fill-height"
+        fluid
+      >
+        <v-row
+          align="center"
+          justify="center"
+        >
+          <v-col class="d-flex" cols="12" sm="4">
+            <v-card
+              class="mx-auto"
+              width="100%"
+            >
+            <v-text-field
+              label="type longitude"
+              v-model="longin"
+              v-on:input="longChanged()"
+            ></v-text-field>
+            <v-text-field
+              label="clicked at longitude"
+              v-model="longout"
+            ></v-text-field>
+            <v-text-field
+              label="type angle"
+              v-model="textangle"
+            ></v-text-field>
+            <v-text-field
+              label="type textlabel"
+              v-model="punkttext"
+            ></v-text-field>
+            </v-card>
+          </v-col>
+          <v-col class="d-flex" cols="12" sm="8">
+            <v-card
+              class="mx-auto"
+              width="100%"
+              height="500px"
+            >
+            <esri-map v-bind:longin="longin" v-bind:textangle="textangle" v-bind:punkttext="punkttext" @clicked="onClickChild"></esri-map>
+            </v-card>
+          </v-col>          
+        </v-row>
+      </v-container>
+    </v-content>
+    <v-footer
+      color="indigo"
+      app
+    >
+      <span class="white--text">&copy; 2019</span>
+    </v-footer>
+  </v-app>
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+ /* eslint-disable */
+ import EsriMap from './Map.vue';
+  export default {
+    props: {
+      source: String,
+    },
+    data: () => ({
+      drawer: null,
+      longin: "11.6",
+      longout: "",
+      textangle: "60",
+      punkttext: "point label"
+    }),
+    components: { "esri-map": EsriMap},
+    methods: {
+      longChanged(){
+        console.log("in longCganged");
+      },
+      onClickChild (value) {
+        console.log(value) // someValue
+        this.longout=value;
+      }
+    }
   }
-}
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
